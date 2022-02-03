@@ -1,0 +1,10 @@
+client presence watching
+client presencetext discord.txt test
+client prefix ;
+
+command test 
+test description this is a test
+test message this is a test message 
+test aliases t 
+
+run openfile token.txt
