@@ -1,5 +1,6 @@
 from typing import Dict, List
 import re
+from .cmds import openFile
 
 def parseLine(line: str) -> None:
     """Parses one line of the txt file"""
@@ -33,8 +34,19 @@ def parseCommandArgs(file_data: str, cmdname: str) -> Dict:
         if i.startswith(cmdname):
             split_cmd = i.split(' ')
             if split_cmd[1] == "description": return_dict["description"] = re.compile(f"{cmdname} description (.*)").findall(i)[0]
-            elif split_cmd[1] == "arguments": return_dict["args"] = re.compile(f"{cmdname} arguments (.*)").findall(i)[0]
+            # elif split_cmd[1] == "arguments": return_dict["args"] = re.compile(f"{cmdname} arguments (.*)").findall(i)[0]
             elif split_cmd[1] == "message": return_dict["message"] = re.compile(f"{cmdname} message (.*)").findall(i)[0]
             elif split_cmd[1] == "aliases": return_dict["aliases"] = re.compile(f"{cmdname} aliases (.*)").findall(i)[0]
 
     return return_dict
+
+def parseRunLine(file_data: str) -> str:
+    file_lines = file_data.split('\n')
+    for i in file_lines:
+        if i.startswith("run openfile"):
+            location = re.compile("run openfile (.*)").findall(i)[0]
+            token_data = openFile(location)
+            return token_data
+        elif i.startswith("run"):
+            token_data = i.split(" ")[1]
+            return token_data

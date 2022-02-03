@@ -14,6 +14,7 @@ from typing import Dict, List
 from .utils import (
     parseConfig,
     parseCommands,
+    parseRunLine,
     )
 
 def build_bot_from_txt(config: Dict) -> Bot:
@@ -43,9 +44,9 @@ def build_bot_from_txt(config: Dict) -> Bot:
 def create_command(config: Dict) -> Command:
     args = config.get("args", [])
     async def command(ctx: Context, *args):
-        for i, arg in enumerate(args):
-            if arg.startswith("*"):
-                setattr(ctx, arg[1:], " ".join(args[i:]))
+        # for i, arg in enumerate(args):
+        #     if arg.startswith("*"):
+        #         setattr(ctx, arg[1:], " ".join(args[i:]))
         
         await ctx.send(config.get("message"))
 
@@ -71,8 +72,14 @@ class Client:
         self.bot = build_bot_from_txt(self.config)
 
         add_all_commands(self.bot, parseCommands(self.data))
+
         
     def load(self, filepath) -> Dict:
         with open(filepath, "r") as f:
             filedata = f.read()
             return filedata
+
+    def run(self):
+        """Runs the bot"""
+        print("bot is online")
+        self.bot.run(parseRunLine(self.data))
